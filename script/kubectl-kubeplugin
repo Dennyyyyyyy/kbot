@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# define variables
+NS=$1
+RES_TYPE=$2
+OPT=$3
+
+# function to display usage info
+function display_usage {
+  echo "Usage: $0 <namespace> <resource-type>, you can add <kubectl-options> as well (e.g. kubectl-kubeplugin3 kube-system po --sort-by=cpu)"
+}
+
+# ensure correct of command-line arguments
+if [ "$#" -lt 2 ]; then
+  display_usage
+  exit 1
+fi
+
+# function to display head in input
+function display_header {
+  printf "%-10s %-15s %-45s %-5s %-5s\n" "Resource" "Namespace" "Name" "CPU" "Memory"
+  echo "-------------------------------------------------------------------------------------"
+}
+
+# function to retrieve and display resource usage statistics from Kubernetes
+function display_statistics {
+  kubectl top $RES_TYPE $KUBE_OPT -n $NS | tail -n +2 | while read -r line
+  do
+    # Extract CPU and memory usage from the output
+    NAME=$(echo "$line" | awk '{print $1}')
+    CPU=$(echo "$line" | awk '{print $2}')
+    MEMORY=$(echo "$line" | awk '{print $3}')
+
+    # Output the statistics to the console
+    printf "%-10s %-15s %-45s %-5s %-5s\n" "$RES_TYPE" "$NS" "$NAME" "$CPU" "$MEMORY"
+  done
+}
+
+# Output header to display
+display_header
+
+# Output statistics to display
+display_statistics
