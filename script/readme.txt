@@ -7,7 +7,7 @@
 
 Плагін треба покласти у ваш PATH, звідти робимо виклик:
 
-kubectl-kubeplugin3 kube-system po --sort-by=cpu
+kubeplugin3 kube-system po --sort-by=cpu
 
 , також можна додати необхідні опції, наприклад сортування по CPU
-kubectl-kubeplugin3 kube-system po --sort-by=cpu
+kubeplugin3 kube-system po --sort-by=cpu
