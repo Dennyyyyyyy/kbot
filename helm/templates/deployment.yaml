@@ -49,7 +49,6 @@ spec:
                 secretKeyRef:
                   key: {{ .Values.secrets.tokenKey }}
                   name: {{ .Values.secrets.name }}
-                
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
