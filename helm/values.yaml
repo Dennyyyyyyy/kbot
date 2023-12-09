@@ -3,20 +3,15 @@
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
-
 image:
-  registry: "ghcr.io"
-  repository: dennyyyyyyy/kbot
-# repository: dennyyyyyyy
+  repository: dennyyyyyyy
   tag: v1.0.7-0cc8968
 #  tag: v1.0.1-1-g370829a
-  os: linux
   arch: amd64
 
 secrets:
   name: kbot
   tokenKey: token
   tokenName: TELE_TOKEN
-
 securityContext:
   privileged: true
