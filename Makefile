@@ -1,6 +1,7 @@
 APP=$(shell basename $(shell git remote get-url origin))
-#REGISTRY=ghcr.io/dennyyyyyyy
-REGISRY=denysdl
+REGISTRY=ghcr.io/dennyyyyyyy
+#Docker registry
+#REGISRY=denysdl
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
 TARGETOS=$(shell go env GOOS) 
 TARGETARCH=$(shell go env GOARCH)
