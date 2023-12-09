@@ -11,7 +11,7 @@ format:
 lint: 
 	staticcheck ./
 
-test: 
+test:
 	go test -v
 
 get: 
