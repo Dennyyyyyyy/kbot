@@ -6,7 +6,8 @@ replicaCount: 1
 
 image:
   repository: dennyyyyyyy
-  tag: v1.0.1-1-g370829a
+  tag: v1.0.7-0cc8968
+#  tag: v1.0.1-1-g370829a
   arch: amd64
 
 secrets:
