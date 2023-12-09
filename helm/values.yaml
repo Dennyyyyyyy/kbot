@@ -7,9 +7,9 @@ image:
   registry: "ghcr.io"
   repository: dennyyyyyyy/kbot
   tag: v1.0.7-0cc8968
+#  tag: v1.0.1-1-g370829a
   os: linux
-  arch: amd64
-
+  arch: ""
 secrets:
   name: kbot
   tokenKey: token
