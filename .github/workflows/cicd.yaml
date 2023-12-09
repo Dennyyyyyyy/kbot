@@ -7,6 +7,10 @@ on:
     tags:
       - v1.*
 
+env:
+          OS: linux
+          ARCH: amd64
+
 jobs:
   ci:
     name: CI
@@ -29,9 +33,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish service
-        env:
-          OS: linux
-          ARCH: amd64
         run: make image push TARGETARCH=amd64
 
   cd:
