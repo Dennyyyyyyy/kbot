@@ -8,7 +8,7 @@ jobs:
 
     steps:
       -name: Checkout
-      users: action/checkout@v3
+      users: actions/checkout@v3
 
       -name: Run test
        run: make test
