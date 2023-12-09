@@ -1,4 +1,5 @@
 name: KBOT-CICD
+
 on: push
 
 jobs: 
@@ -8,7 +9,7 @@ jobs:
 
     steps:
       -name: Checkout
-      users: actions/checkout@v3
+      users: action/checkout@v3
 
-      -name: Run test
-       run: make test
+      - name: Run test
+        run: make test
