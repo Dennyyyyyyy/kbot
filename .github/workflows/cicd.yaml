@@ -8,6 +8,7 @@ on:
 env:
   OS: linux
   ARCH: amd64
+  TARGETARCH: amd64
 
 jobs:
   ci:
@@ -47,7 +48,7 @@ jobs:
 
       - uses: mikefarah/yq@master
         with: 
-          cmd: yq -i '.image.tag=strenv(VERSION) | .image.arch="amd64"' helm/values.yaml
+          cmd: yq -i '.image.tag=strenv(VERSION) | .image.arch=strenv(TARGETARCH)' helm/values.yaml
 
       - run: | 
           git config user.name github-actions
