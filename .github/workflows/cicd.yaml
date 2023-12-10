@@ -8,8 +8,8 @@ on:
       - v1.1*
 
 env:
-          OS: linux
-          ARCH: amd64
+          os: linux
+          arch: amd64
 
 jobs:
   ci:

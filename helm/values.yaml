@@ -8,7 +8,7 @@ image:
   repository: dennyyyyyyy/kbot
   tag: v1.0.7-dad81b0
   os: linux
-  arch: ""
+  arch: amd64
 secrets:
   name: kbot
   tokenKey: token
