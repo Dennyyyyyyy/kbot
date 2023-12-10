@@ -6,9 +6,9 @@ replicaCount: 1
 image:
   registry: "ghcr.io"
   repository: dennyyyyyyy/kbot
-  tag: v1.0.7-1d23239
+  tag: v1.0.7-8962adf
   os: linux
-  arch: ""
+  arch: "amd64"
 secrets:
   name: kbot
   tokenKey: token
