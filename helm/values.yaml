@@ -6,7 +6,7 @@ replicaCount: 1
 image:
   registry: "ghcr.io"
   repository: dennyyyyyyy/kbot
-  tag: v1.0.7-5e17f5b
+  tag: v1.0.7-aebbbe9
   #  tag: v1.0.1-1-g370829a
   os: linux
   arch: ""
