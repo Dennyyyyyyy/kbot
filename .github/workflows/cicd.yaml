@@ -6,8 +6,8 @@ on:
       - develop
 
 env:
-          os: linux
-          arch: amd64
+  OS: linux
+  ARCH: amd64
 
 jobs:
   ci:
