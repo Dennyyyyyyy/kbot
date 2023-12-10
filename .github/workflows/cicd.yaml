@@ -31,8 +31,13 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish service
-        run: make image push clean
+      - name: Build&Push
+        env:
+          APP: "kbot"
+          REGISTRY: ${{ github.actor }}
+        run: make image push TARGETARCH=$TARGETARCH
+      - name: Clean
+        run: make clean TARGETARCH=$TARGETARCH
 
   cd:
     name: CD
