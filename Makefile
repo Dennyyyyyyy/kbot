@@ -3,8 +3,10 @@ REGISTRY=ghcr.io/dennyyyyyyy
 #Docker registry
 #REGISRY=denysdl
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
-TARGETOS=$(shell go env GOOS) 
-TARGETARCH=$(shell go env GOARCH)
+TARGETOS=linux
+TARGETARCH=amd64
+#TARGETOS=$(shell go env GOOS) 
+#TARGETARCH=$(shell go env GOARCH)
 #dpkg --print-architecure
 
 format: 
