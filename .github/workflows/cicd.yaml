@@ -3,9 +3,7 @@ name: KBOT-CICD
 on: 
   push:
     branches: 
-      - develop
-    tags:
-      - v1.*
+      - main
 
 jobs:
   ci:
@@ -21,24 +19,15 @@ jobs:
 
       - name: Run test
         run: make test
-#      - name: Docker Hub login
-#        uses: docker/login-action@v2
-      - name: GitHub registry login
+      - name: Docker Hub login
         uses: docker/login-action@v2
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-#          username: ${{ secrets.DOCKERHUB_USERNAME }}
-#          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      # - name: Build&Push
-      #   env: 
-      #     APP: "kbot"
-      #     REGISTRY: ${{ secrets.DOCKERHUB_USERNAME }}
-      - name: Publish service
-        env:
-          OS: linux
-          ARCH: amd64
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build&Push
+        env: 
+          APP: "kbot"
+          REGISTRY: ${{ secrets.DOCKERHUB_USERNAME }}
         run: make image push TARGETARCH=amd64
 
   cd:
