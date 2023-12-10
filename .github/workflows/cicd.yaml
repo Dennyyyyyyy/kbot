@@ -34,7 +34,7 @@ jobs:
       - name: Build&Push
         env:
           APP: "kbot"
-          REGISTRY: ${{ github.actor }}
+          REGISTRY: ${{ secrets.DOCKERHUB_USERNAME }}
         run: make image push OS=$OS TARGETARCH=$TARGETARCH
       - name: Clean
         run: make clean OS=$OS TARGETARCH=$TARGETARCH
