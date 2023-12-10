@@ -4,8 +4,6 @@ on:
   push:
     branches: 
       - develop
-    tags:
-      - v1.1*
 
 env:
           os: linux
@@ -33,7 +31,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish service
-        run: make image push TARGETARCH=amd64
+        run: make image push clean
 
   cd:
     name: CD
@@ -49,7 +47,7 @@ jobs:
 
       - uses: mikefarah/yq@master
         with: 
-          cmd: yq -i '.image.tag=strenv(VERSION) | .image.arch=strenv(TARGETARCH)' helm/values.yaml
+          cmd: yq -i '.image.tag=strenv(VERSION)' helm/values.yaml
 
       - run: | 
           git config user.name github-actions
