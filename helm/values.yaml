@@ -15,3 +15,8 @@ secrets:
   tokenName: TELE_TOKEN
 securityContext:
   privileged: true
+container:
+  ports:
+    - containerPort: 80  # Provide the required container port
+  volumeMounts:
+    - mountPath: /app    # Provide the required mount path
