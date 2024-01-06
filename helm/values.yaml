@@ -6,7 +6,7 @@ replicaCount: 1
 image:
   registry: "ghcr.io"
   repository: dennyyyyyyy/kbot
-  tag: v1.0.7-e16349f
+  tag: v1.0.7-7f83f7a
   os: linux
   arch: "amd64"
 secrets:
@@ -17,6 +17,6 @@ securityContext:
   privileged: true
 container:
   ports:
-    - containerPort: 80  # Provide the required container port
+    - containerPort: 80 # Provide the required container port
   volumeMounts:
-    - mountPath: /app    # Provide the required mount path
+    - mountPath: /app # Provide the required mount path
