@@ -17,9 +17,6 @@ spec:
       {{- end }}
       labels:
         {{- include "helm.labels" . | nindent 8 }}
-	{{- with .Values.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
     spec:
       dsnConfig:
         nameservers:
