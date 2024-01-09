@@ -3,13 +3,13 @@
 ##pre-commit hook скрипт з локально встановленим gitleaks
 
 Start from create and switch to a new branch
-```zsh
+```sh
 $ git checkout -b w8task1
 $ git tag git_hook
 $ git push origin git_hook
 ```
 Install gitleaks to current OS and run 
-```zsh
+```sh
 $ brew install gitleaks
 $ gitleaks detect --source . --log-opts="--all"
 
@@ -62,8 +62,21 @@ $ touch .pre-commit-config.yaml
 $ pre-commit install
 pre-commit installed at .git/hooks/pre-commit
 $ pre-commit run --all-files
-An error has occurred: InvalidConfigError: 
-==> File .pre-commit-config.yaml
-=====> Expected a Config map but got a NoneType
-Check the log at /Users/denys/.cache/pre-commit/pre-commit.log
+Detect hardcoded secrets.................................................Passed
+```
+Add a new code to .pre-commit-config.yaml
+```zsh
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.16.1
+    hooks:
+      - id: gitleaks
+```
+```zsh
+$ pre-commit autoupdate
+[https://github.com/gitleaks/gitleaks] updating v8.16.1 -> v8.18.1
+$ pre-commit install
+pre-commit installed at .git/hooks/pre-commit
+$ pre-commit run --all-files
+Detect hardcoded secrets.................................................Passed
 ```
