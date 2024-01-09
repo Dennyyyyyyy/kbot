@@ -201,9 +201,8 @@ $ git config pre-commit.gitleaks true
 ```
 check our script
 ```zsh
-git commit -m "with autoinstall script"
+$ git commit -m "with autoinstall script"
 pre_commit_check.........................................................Passed
-[w8task1 33f55a5] with autoinstall script
- 3 files changed, 176 insertions(+), 6 deletions(-)
- create mode 100755 pre_commit_check.py
+[w8task1 16843ed] with autoinstall script
+ 1 file changed, 3 insertions(+)
 ```
