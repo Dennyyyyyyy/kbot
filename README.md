@@ -187,8 +187,8 @@ check our script
 ```zsh
 $ git commit -m "with autoinstall script"
 
-Finding:     tokenName: 6367718599:AAF9rvS1tQ4W*******************************
-Secret:      6367718599:AAF9rvS1tQ4W*******************************
+Finding:     tokenName: REDACTED
+Secret:      REDACTED
 RuleID:      telegram-bot-api-token
 Entropy:     4.816403
 File:        helm/values.yaml
@@ -199,11 +199,14 @@ Email:       den.grinyko@gmail.com
 Date:        2024-01-09T12:12:58Z
 Fingerprint: f17897fbbd640189b982e2d62d0ccc31d77c1681:helm/values.yaml:telegram-bot-api-token:16
 
-10:56PM INF 95 commits scanned.
-10:56PM INF scan completed in 259ms
-10:56PM WRN leaks found: 7
+11:30PM INF 21 commits scanned.
+11:30PM INF scan completed in 61.5ms
+11:30PM WRN leaks found: 7
 ```
 check commit without token
 ```zsh
-
+git commit -m "with autoinstall script without token"
+pre_commit_check.........................................................Passed
+[w8task1 a7b5ad2] with autoinstall script without token
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 ```
