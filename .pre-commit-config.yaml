@@ -11,7 +11,6 @@ repos:
     hooks:
       - id: pre_commit_check
         name: pre_commit_check
-        language: python
-        entry: ./pre_commit_check.py
-        language_version: python3
+        language: system
+        entry: ./pre_commit_check.sh
 

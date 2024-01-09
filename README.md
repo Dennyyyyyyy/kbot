@@ -129,66 +129,50 @@ repos:
     hooks:
       - id: pre_commit_check
         name: pre_commit_check
-        language: python
-        entry: ./pre_commit_check.py
-        language_version: python3
+        language: system
+        entry: ./pre_commit_check.sh
 ```
 Create a new script on Python
 ```zsh
-touch pre_commit_check.py
+touch pre_commit_check.sh
 ```
 add code to the new created file
-```py
-#!/usr/bin/env python3
-import subprocess
-import platform
-import sys
-import os
+```sh
+#!/bin/bash
 
-def run_command(command):
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output, error = process.communicate()
-    return process.returncode, output.decode('utf-8'), error.decode('utf-8')
+# Перевірка чи gitleaks встановлено в системі
+if ! command -v gitleaks &> /dev/null; then
+    echo "Cannot find gitleaks in your OS. Installing..."
+    
+    # Встановлення gitleaks залежно від операційної системи
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        # Для Linux
+        wget https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64 -O gitleaks
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        # Для macOS
+        wget https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-darwin-amd64 -O gitleaks
+    elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]; then
+        # Для Windows
+        powershell -Command "& { Invoke-WebRequest -Uri https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-windows-amd64.exe -OutFile gitleaks.exe }"
+        
+    else
+        echo "Cannot recongnize your OS. Install gitleaks impossible."
+        exit 1
+    fi
 
-def install_gitleaks():
-    system_platform = platform.system().lower()
+    chmod +x gitleaks
+    sudo mv gitleaks /usr/local/bin/
+    
+    echo "gitleaks has been installed successfully."
+fi
 
-    if system_platform == 'linux':
-        return run_command(['sudo', 'curl', '-sSfL', 'https://github.com/zricethezav/gitleaks/releases/download/v7.2.1/gitleaks-linux-amd64', '-o', '/usr/local/bin/gitleaks'])
-
-    elif system_platform == 'darwin':
-        return run_command(['sudo', 'curl', '-sSfL', 'https://github.com/zricethezav/gitleaks/releases/download/v7.2.1/gitleaks-darwin-amd64', '-o', '/usr/local/bin/gitleaks'])
-
-    elif system_platform == 'windows':
-        return run_command(['powershell', '-Command', 'iwr', '-outf', 'gitleaks.exe', 'https://github.com/zricethezav/gitleaks/releases/download/v7.2.1/gitleaks-windows-amd64.exe'])
-
-    else:
-        print(f"Unsupported platform: {system_platform}")
-        sys.exit(1)
-
-def main():
-    # Check if gitleaks is enabled via git config
-    gitleaks_enabled, _, _ = run_command(['git', 'config', 'pre-commit.gitleaks'])
-
-    # Convert to string and handle the case where gitleaks_enabled is an integer
-    gitleaks_enabled = str(gitleaks_enabled).strip().lower()
-
-    if gitleaks_enabled == 'true':
-        # Install gitleaks if not installed
-        if not os.path.exists('/usr/local/bin/gitleaks') and not os.path.exists('gitleaks.exe'):
-            returncode, output, error = install_gitleaks()
-            if returncode != 0:
-                print("Error installing gitleaks:")
-                print(error)
-                sys.exit(1)
-
-if __name__ == '__main__':
-    main()
+# Виконання gitleaks для перевірки чутливих даних
+gitleaks detect --source . --verbose
 
 ```
 make it executing
 ```zsh 
-chmod +x pre_commit_check.py
+chmod +x pre_commit_check.sh
 ```
 install pre-commit
 ```zsh
@@ -202,7 +186,24 @@ $ git config pre-commit.gitleaks true
 check our script
 ```zsh
 $ git commit -m "with autoinstall script"
-pre_commit_check.........................................................Passed
-[w8task1 16843ed] with autoinstall script
- 1 file changed, 3 insertions(+)
+
+Finding:     tokenName: 6367718599:AAF9rvS1tQ4W*******************************
+Secret:      6367718599:AAF9rvS1tQ4W*******************************
+RuleID:      telegram-bot-api-token
+Entropy:     4.816403
+File:        helm/values.yaml
+Line:        16
+Commit:      f17897fbbd640189b982e2d62d0ccc31d77c1681
+Author:      Dennyyyyyyy
+Email:       den.grinyko@gmail.com
+Date:        2024-01-09T12:12:58Z
+Fingerprint: f17897fbbd640189b982e2d62d0ccc31d77c1681:helm/values.yaml:telegram-bot-api-token:16
+
+10:56PM INF 95 commits scanned.
+10:56PM INF scan completed in 259ms
+10:56PM WRN leaks found: 7
+```
+check commit without token
+```zsh
+
 ```
