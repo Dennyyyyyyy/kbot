@@ -1,5 +1,17 @@
+#localonly
+# repos:
+#   - repo: https://github.com/gitleaks/gitleaks
+#     rev: v8.18.1
+#     hooks:
+#       - id: gitleaks
+
+#with auto install gitleaks
 repos:
-  - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.18.1
+  - repo: local
     hooks:
-      - id: gitleaks
+      - id: pre_commit_check
+        name: pre_commit_check
+        language: python
+        entry: ./pre_commit_check.py
+        language_version: python3
+
