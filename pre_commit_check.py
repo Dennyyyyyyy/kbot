@@ -2,7 +2,7 @@
 import subprocess
 import platform
 import sys
-import os
+#import os
 
 def run_command(command):
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
