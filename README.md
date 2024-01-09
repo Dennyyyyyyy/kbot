@@ -79,4 +79,10 @@ $ pre-commit install
 pre-commit installed at .git/hooks/pre-commit
 $ pre-commit run --all-files
 Detect hardcoded secrets.................................................Passed
+$ git add .
+$ git commit -m "this commit contains a secret"
+Detect hardcoded secrets.................................................Passed
+[w8task1 b091b26] this commit contains a secret
+ 2 files changed, 20 insertions(+), 7 deletions(-)
+
 ```
