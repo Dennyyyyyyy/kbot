@@ -5,9 +5,11 @@ import sys
 import os
 
 def run_command(command):
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output, error = process.communicate()
-    return process.returncode, output.decode('utf-8'), error.decode('utf-8')
+    try:
+        process = subprocess.run(command, capture_output=True, text=True, check=True)
+        return process.returncode, process.stdout, process.stderr
+    except subprocess.CalledProcessError as e:
+        return e.returncode, e.stdout, e.stderr
 
 def install_gitleaks():
     system_platform = platform.system().lower()
@@ -26,25 +28,38 @@ def install_gitleaks():
         sys.exit(1)
 
 def check_gitleaks():
-    return run_command(['gitleaks', '--verbose', '--redact'])
+    try:
+        result = subprocess.run(['gitleaks', '--verbose', '--redact'], check=True, capture_output=True, text=True)
+        return result.returncode, result.stdout, result.stderr
+    except subprocess.CalledProcessError as e:
+        return e.returncode, e.stdout, e.stderr
 
+# def main():
+#     # Install gitleaks if not installed
+#     if not os.path.exists('/usr/local/bin/gitleaks') and not os.path.exists('gitleaks.exe'):
+#         returncode, output, error = install_gitleaks()
+#         if returncode != 0:
+#             print("Error installing gitleaks:")
+#             print(error)
+#             sys.exit(1)
+
+#     # Check for leaks using gitleaks
+#     returncode, output, error = check_gitleaks()
+#     if returncode != 0:
+#         print("Gitleaks found potential leaks:")
+#         print(output)
+#         sys.exit(1)
+
+#     # Additional checks or actions can be added here
+
+# if __name__ == '__main__':
+#     main()
 def main():
-    # Install gitleaks if not installed
-    if not os.path.exists('/usr/local/bin/gitleaks') and not os.path.exists('gitleaks.exe'):
-        returncode, output, error = install_gitleaks()
-        if returncode != 0:
-            print("Error installing gitleaks:")
-            print(error)
-            sys.exit(1)
-
-    # Check for leaks using gitleaks
     returncode, output, error = check_gitleaks()
     if returncode != 0:
         print("Gitleaks found potential leaks:")
-        print(output)
+        print(output if output else "Error running gitleaks.")
         sys.exit(1)
 
-    # Additional checks or actions can be added here
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
