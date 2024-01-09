@@ -2,7 +2,7 @@
 import subprocess
 import platform
 import sys
-#import os
+import os
 
 def run_command(command):
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -29,20 +29,22 @@ def check_gitleaks():
     return run_command(['gitleaks', '--verbose', '--redact'])
 
 def main():
-    # Check if gitleaks is enabled via git config
-    gitleaks_enabled, _, _ = run_command(['git', 'config', 'pre-commit.gitleaks'])
+    # Install gitleaks if not installed
+    if not os.path.exists('/usr/local/bin/gitleaks') and not os.path.exists('gitleaks.exe'):
+        returncode, output, error = install_gitleaks()
+        if returncode != 0:
+            print("Error installing gitleaks:")
+            print(error)
+            sys.exit(1)
 
-    # Convert to string and handle the case where gitleaks_enabled is an integer
-    gitleaks_enabled = str(gitleaks_enabled).strip().lower()
+    # Check for leaks using gitleaks
+    returncode, output, error = check_gitleaks()
+    if returncode != 0:
+        print("Gitleaks found potential leaks:")
+        print(output)
+        sys.exit(1)
 
-    if gitleaks_enabled == 'true':
-        # Install gitleaks if not installed
-        if not os.path.exists('/usr/local/bin/gitleaks') and not os.path.exists('gitleaks.exe'):
-            returncode, output, error = install_gitleaks()
-            if returncode != 0:
-                print("Error installing gitleaks:")
-                print(error)
-                sys.exit(1)
+    # Additional checks or actions can be added here
 
 if __name__ == '__main__':
     main()
