@@ -13,6 +13,6 @@ image:
 secrets:
   name: kbot
   tokenKey: token
-  tokenName: 6367718599:AAF9rvS1tQ4W1qb0xkMGy5iThM7Fp5AYeUM
+  tokenName: 6367718599:AAF9rvS1tQ4W1qb0xkMGy5hM7Fp5AYeUM
 securityContext:
   privileged: true
