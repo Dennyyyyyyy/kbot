@@ -25,6 +25,9 @@ def install_gitleaks():
         print(f"Unsupported platform: {system_platform}")
         sys.exit(1)
 
+def check_gitleaks():
+    return run_command(['gitleaks', '--verbose', '--redact'])
+
 def main():
     # Check if gitleaks is enabled via git config
     gitleaks_enabled, _, _ = run_command(['git', 'config', 'pre-commit.gitleaks'])
