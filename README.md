@@ -1,95 +1,69 @@
-# kbot
-DevOps application from scratch 
+#w8_task1 Git pre-commit hook з використанням gitleaks для перевірки наявності секретів у коді
 
-https://t.me/Dennyyyyyyy_bot
+##pre-commit hook скрипт з локально встановленим gitleaks
 
-#ініціалузуємо mod над яким будемо працювати далі
-go mod init github.com/Dennyyyyyyy/kbot #вказуємо імʼя репозиторія, go створить файл go.mod де буде зберігати всі модулі кода
+Start from create and switch to a new branch
+```zsh
+$ git checkout -b w8task1
+$ git tag git_hook
+$ git push origin git_hook
+```
+Install gitleaks to current OS and run 
+```zsh
+$ brew install gitleaks
+$ gitleaks detect --source . --log-opts="--all"
 
-#встановимо кодогенератор, потужна бібліотека для створення сучасних cli-додатків 
-go install github.com/spf13/cobra-cli@latest 
+    ○
+    │╲
+    │ ○
+    ○ ░
+    ░    gitleaks
 
-#згенеруємо початковий код
-cobra-cli init #буде створено основний файл main.go, заповнить go.mod, та директорію cmd з root.go де згенеровано початковий код
+2:03PM INF 75 commits scanned.
+2:03PM INF scan completed in 291ms
+2:03PM INF no leaks found
+```
+Add a token to values.yaml and check one more time
+```zsh
+$ git add .
+$ git commit -m "adding token"
+[w8task1 f17897f] adding token
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+$ gitleaks detect --source . --verbose
 
-#згенеруємо код команди version
-cobra-cli add version #отримали новий файл version.go
+    ○
+    │╲
+    │ ○
+    ○ ░
+    ░    gitleaks
 
-#білд програми, команда run автоматично білдає і запускає код
-go run main.go help #як видно код програми help вже інтегровано
+Finding:     tokenName: 6367718599:AAF9rvS1tQ4W*********************
+Secret:      6367718599:AAF9rvS1tQ4W*********************
+RuleID:      telegram-bot-api-token
+Entropy:     4.816403
+File:        helm/values.yaml
+Line:        16
+Commit:      f17897fbbd640189b982e2d62d0ccc31d77c1681
+Author:      Dennyyyyyyy
+Email:       den.grinyko@gmail.com
+Date:        2024-01-09T12:12:58Z
+Fingerprint: f17897fbbd640189b982e2d62d0ccc31d77c1681:helm/values.yaml:telegram-bot-api-token:16
 
-#перевіримо команду version
-go run main.go version 
-
-#додамо команду яка буде з основним кодом
-cobra-cli add kbot
-
-#ця команда динамічно збирає всі компоненти перед білдом (ld - це лінкер), прямо з командного рядка. Параметр -Х присвоєння значення зміним в модулях.
-go build -ldflags "-X="github.com/Dennyyyyyyy/kbot/cmd.appVersion=1.0.0 #отримали бінарний файл на імʼя kbot
-
-#запустимо наш kbot
-./kbot
-
-#імпортуємо пакет в kbot.go
-telebot "gopkg.in/telebot.v3"
-
-#декларуємо зміну TELE_TOKEN
-var (
-	//name of Telebot
-	TeleToken = os.Getenv("TELE_TOKEN")
-)
-
-#додамо в блоці хендлера kbot код функції run
-fmt.Printf("kbot %s started", appVersion)
-
-#та блок ініціалізації kbot, створення нового боту з параметрами
-kbot, err := telebot.NewBot(telebot.Settings{
-			URL:    "",
-			Token:  TeleToken,
-			Poller: &telebot.LongPoller{Timeout: 10 * time.Second},
-		})
-
-#наступний блок це блок обробки помилок
-if err != nil {
-			log.Fatalf("Please check TELE_TOKEN env variable. %s", err)
-			return
-		}
-
-#обробка події коду Handler-a
-kbot.Handle(telebot.OnText, func(m telebot.Context) error {
-			log.Print(m.Message().Payload, m.Text())
-			payload :=m.Message().Payload
-
-				switch payload {
-				case "Hello Denny":
-					err = m.Send (fmt.Sprintf("Hello! I`m Kbot %s. How are you up?", appVersion))
-					
-				}
-
-			return err
-		})
-
-#запуск бота
-kbot.Start()
-
-#переходимо до тестування
-gofmt -s -w ./     #форматує код де використовує таб для відступів,пропусків,вирівнювання
-
-#завантажемо пакети та залежності
-go get
-
-#білдуємо программу з новою версією
-go build -ldflags "-X="github.com/Dennyyyyyyy/kbot/cmd.appVersion=1.0.2
-
-#додамо токен в зміну TELE_TOKEN без збереження інформації в логах
-read -s -w TOKEN_TELE #далі вставимо наш токен Ctrl+V
-
-#єкспортуеємо зміну
-export TELE_TOKEN
-
-#запустимо програму та перевіримо
-./kbot start
-
-Чудово, все працює!
-
-Комміт та пуш.
+2:13PM INF 76 commits scanned.
+2:13PM INF scan completed in 275ms
+2:13PM WRN leaks found: 1
+```
+Install pre-commit to current OS, check version, create a new pre-commit file in root dir and add to repo
+```zsh
+$ brew install pre-commit
+$ pre-commit --version
+pre-commit 3.6.0
+$ touch .pre-commit-config.yaml
+$ pre-commit install
+pre-commit installed at .git/hooks/pre-commit
+$ pre-commit run --all-files
+An error has occurred: InvalidConfigError: 
+==> File .pre-commit-config.yaml
+=====> Expected a Config map but got a NoneType
+Check the log at /Users/denys/.cache/pre-commit/pre-commit.log
+```
