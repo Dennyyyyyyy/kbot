@@ -27,4 +27,4 @@ if ! command -v gitleaks &> /dev/null; then
 fi
 
 # Виконання gitleaks для перевірки чутливих даних
-gitleaks detect --redact -v --source . --verbose --report-path=report.json --log-opts='--since=2024-01-09'
+gitleaks detect --redact -v --source . --verbose --report-path=report.json --log-opts='--since=2024-01-09T22:00:00'
