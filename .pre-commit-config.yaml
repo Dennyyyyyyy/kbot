@@ -1,16 +1,5 @@
-#localonly
-# repos:
-#   - repo: https://github.com/gitleaks/gitleaks
-#     rev: v8.18.1
-#     hooks:
-#       - id: gitleaks
-
-#with auto install gitleaks
 repos:
-  - repo: local
-    hooks:
-      - id: pre_commit_check
-        name: pre_commit_check
-        language: system
-        entry: ./pre_commit_check.sh
-
+- repo: https://github.com/gitleaks/gitleaks
+  rev: v8.18.1
+  hooks:
+    - id: gitleaks

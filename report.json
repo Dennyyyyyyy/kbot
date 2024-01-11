@@ -1,1 +1,22 @@
-[]
+[
+ {
+  "Description": "Telegram Bot API Token",
+  "StartLine": 16,
+  "EndLine": 16,
+  "StartColumn": 13,
+  "EndColumn": 0,
+  "Match": " REDACTED",
+  "Secret": "REDACTED",
+  "File": "helm/values.yaml",
+  "SymlinkFile": "",
+  "Commit": "a4040a6a15cf677ca914075caa176fb6e59753d9",
+  "Entropy": 4.816403,
+  "Author": "Dennyyyyyyy",
+  "Email": "den.grinyko@gmail.com",
+  "Date": "2024-01-11T11:13:36Z",
+  "Message": "with autoinstall script",
+  "Tags": [],
+  "RuleID": "telegram-bot-api-token",
+  "Fingerprint": "a4040a6a15cf677ca914075caa176fb6e59753d9:helm/values.yaml:telegram-bot-api-token:16"
+ }
+]

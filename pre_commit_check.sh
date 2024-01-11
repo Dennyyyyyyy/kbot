@@ -1,34 +1,85 @@
 #!/bin/bash
 
-# Перевірка чи gitleaks встановлено в системі
-if ! command -v gitleaks &> /dev/null; then
-    echo "Cannot find gitleaks in your OS. Installing..."
-    
-    # Встановлення gitleaks залежно від операційної системи
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        # Для Linux
-        git clone https://github.com/gitleaks/gitleaks.git
-        cd gitleaks
-        make build
-        cp gitleaks /usr/local/bin
-        wget https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64 -O gitleaks
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-        # Для macOS
-        wget https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-darwin-amd64 -O gitleaks
-    elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]; then
-        # Для Windows
-        powershell -Command "& { Invoke-WebRequest -Uri https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-windows-amd64.exe -OutFile gitleaks.exe }"
-        
-    else
-        echo "Cannot recongnize your OS. Install gitleaks impossible."
-        exit 1
-    fi
+# Визначення операційної системи
+os_name=$(uname)
 
-    chmod +x gitleaks
-    sudo mv gitleaks /usr/local/bin/
-    
-    echo "gitleaks has been installed successfully."
-fi
+# Функція для виведення повідомлення про помилку та вихід зі скрипту
+error_exit() {
+  echo "$1" >&2
+  exit 1
+}
 
-# Виконання gitleaks для перевірки чутливих даних
-gitleaks detect --redact -v --source . --verbose --report-path=report.json --log-opts='--since=2024-01-09T22:00:00'
+# Функція для встановлення pre-commit
+install_precommit() {
+  echo "Встановлення pre-commit..."
+  if command -v pip3 &>/dev/null; then
+    pip3 install pre-commit
+  elif command -v pip &>/dev/null; then
+    pip install pre-commit
+  else
+    error_exit "pip не знайдено. Встановіть pip перед встановленням pre-commit."
+  fi
+}
+
+# Функція для створення та наповнення .pre-commit-config.yaml
+create_precommit_config() {
+  echo "Створення .pre-commit-config.yaml..."
+  echo "- repo: https://github.com/gitleaks/gitleaks" > .pre-commit-config.yaml
+  echo "  rev: v8.18.1" >> .pre-commit-config.yaml
+  echo "  hooks:" >> .pre-commit-config.yaml
+  echo "    - id: gitleaks" >> .pre-commit-config.yaml
+}
+
+# Функція для виконання команд pre-commit
+run_precommit_commands() {
+  echo "Виконання команд pre-commit..."
+  pre-commit autoupdate
+  pre-commit install
+  pre-commit
+}
+
+# Визначення наявності Python
+check_python() {
+  if command -v python3 &>/dev/null; then
+    echo "Python встановлено"
+  else
+    error_exit "Python не знайдено. Встановіть Python перед використанням цього скрипта."
+  fi
+}
+
+# Визначення наявності pre-commit
+check_precommit() {
+  if command -v pre-commit &>/dev/null; then
+    echo "pre-commit встановлено"
+  else
+    install_precommit
+    echo "pre-commit успішно встановлено"
+  fi
+}
+
+# Визначення наявності .pre-commit-config.yaml
+check_precommit_config() {
+  if [ -e .pre-commit-config.yaml ]; then
+    echo ".pre-commit-config.yaml вже існує"
+  else
+    create_precommit_config
+    echo ".pre-commit-config.yaml успішно створено"
+  fi
+}
+
+# Виведення інформації про операційну систему
+echo "Операційна система: $os_name"
+
+# Перевірка наявності Python
+check_python
+
+# Перевірка наявності pre-commit
+check_precommit
+
+# Перевірка наявності .pre-commit-config.yaml
+check_precommit_config
+
+# Виконання команд pre-commit
+run_precommit_commands
+
+echo "Great news! Now your commits are protected from leaks"
