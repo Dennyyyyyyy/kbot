@@ -7,6 +7,10 @@ if ! command -v gitleaks &> /dev/null; then
     # Встановлення gitleaks залежно від операційної системи
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         # Для Linux
+        git clone https://github.com/gitleaks/gitleaks.git
+        cd gitleaks
+        make build
+        cp gitleaks /usr/local/bin
         wget https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64 -O gitleaks
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         # Для macOS
