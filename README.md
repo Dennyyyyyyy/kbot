@@ -227,10 +227,32 @@ $ git config pre-commit.gitleaks true
 check our script commit without token
 ```zsh
 $ git commit -m "check without token"
-
-
+Detect hardcoded secrets.................................................Passed
+[w8task1 3aeccbd] check without token
+ 2 files changed, 91 insertions(+), 66 deletions(-)
 ```
 one more check with token
 ```zsh
+$ git commit -m "check with token"
+Detect hardcoded secrets.................................................Failed
+- hook id: gitleaks
+- exit code: 1
 
+○
+    │╲
+    │ ○
+    ○ ░
+    ░    gitleaks
+
+Finding:     tokenName: REDACTED
+Secret:      REDACTED
+RuleID:      telegram-bot-api-token
+Entropy:     4.816403
+File:        helm/values.yaml
+Line:        16
+Fingerprint: helm/values.yaml:telegram-bot-api-token:16
+
+4:52PM INF 1 commits scanned.
+4:52PM INF scan completed in 7.08ms
+4:52PM WRN leaks found: 1
 ```
