@@ -224,8 +224,25 @@ enable gitleaks
 ```zsh
 $ git config pre-commit.gitleaks true
 ```
-check our script commit without token
+run our script first
+```zsh 
+$ ./pre_commit_check.sh
+Операційна система: Darwin
+Python встановлено
+pre-commit встановлено
+.pre-commit-config.yaml вже існує
+Виконання команд pre-commit...
+[https://github.com/gitleaks/gitleaks] already up to date!
+pre-commit installed at .git/hooks/pre-commit
+[WARNING] Unstaged files detected.
+[INFO] Stashing unstaged files to /Users/denys/.cache/pre-commit/patch1704984250-13452.
+Detect hardcoded secrets.................................................Passed
+[INFO] Restored changes from /Users/denys/.cache/pre-commit/patch1704984250-13452.
+Great news! Now your commits are protected from leaks
+```
+check our script with commit without token
 ```zsh
+$ git add .
 $ git commit -m "check without token"
 Detect hardcoded secrets.................................................Passed
 [w8task1 3aeccbd] check without token
@@ -233,6 +250,7 @@ Detect hardcoded secrets.................................................Passed
 ```
 one more check with token
 ```zsh
+$ git add .
 $ git commit -m "check with token"
 Detect hardcoded secrets.................................................Failed
 - hook id: gitleaks
@@ -256,3 +274,53 @@ Fingerprint: helm/values.yaml:telegram-bot-api-token:16
 4:52PM INF scan completed in 7.08ms
 4:52PM WRN leaks found: 1
 ```
+check script on another OS. make our check clear
+```sh
+$ pre-commit uninstall
+$ rm .pre-commit-config.yaml
+```
+now we can run our script
+```sh
+./pre_commit_check.sh
+Операційна система: Linux
+Python встановлено
+pre-commit встановлено
+Створення .pre-commit-config.yaml...
+.pre-commit-config.yaml успішно створено
+Виконання команд pre-commit...
+Configuration has been migrated.
+Updating https://github.com/gitleaks/gitleaks ... already up to date.
+pre-commit installed at .git/hooks/pre-commit
+[INFO] Installing environment for https://github.com/gitleaks/gitleaks.
+[INFO] Once installed this environment will be reused.
+[INFO] This may take a few minutes...
+Detect hardcoded secrets.............................(no files to check)Skipped
+Great news! Now your commits are protected from leaks
+```
+add token to values and try to commit
+```sh
+$ git add .
+$ git commit -m "with token on another OS"
+Detect hardcoded secrets.................................................Failed
+- hook id: gitleaks
+- exit code: 1
+
+○
+    │╲
+    │ ○
+    ○ ░
+    ░    gitleaks
+
+Finding:     tokenName: REDACTED
+Secret:      REDACTED
+RuleID:      telegram-bot-api-token
+Entropy:     4.816403
+File:        helm/values.yaml
+Line:        16
+Fingerprint: helm/values.yaml:telegram-bot-api-token:16
+
+3:01PM INF 1 commits scanned.
+3:01PM INF scan completed in 4.03ms
+3:01PM WRN leaks found: 1
+```
+Looks like everything works in proper way.
