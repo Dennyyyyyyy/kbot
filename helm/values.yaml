@@ -16,3 +16,4 @@ secrets:
   tokenName: 
 securityContext:
   privileged: true
+  

@@ -121,18 +121,8 @@ Detect hardcoded secrets................................................Skipped
 ```
 
 ## pre-commit hook скрипт з автоматичним встановленням gitleaks залежно від операційної системи, з опцією enable за допомогою git config
-
-Update our .pre-commit-config.yaml with a new code
-```zsh
-repos:
-  - repo: local
-    hooks:
-      - id: pre_commit_check
-        name: pre_commit_check
-        language: system
-        entry: ./pre_commit_check.sh
-```
-Create a new script on Python
+### ! Python must be installed on your system   
+Create a new script on bash
 ```zsh
 touch pre_commit_check.sh
 ```
@@ -140,73 +130,107 @@ add code to the new created file
 ```sh
 #!/bin/bash
 
-# Перевірка чи gitleaks встановлено в системі
-if ! command -v gitleaks &> /dev/null; then
-    echo "Cannot find gitleaks in your OS. Installing..."
-    
-    # Встановлення gitleaks залежно від операційної системи
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        # Для Linux
-        wget https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64 -O gitleaks
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-        # Для macOS
-        wget https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-darwin-amd64 -O gitleaks
-    elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]; then
-        # Для Windows
-        powershell -Command "& { Invoke-WebRequest -Uri https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-windows-amd64.exe -OutFile gitleaks.exe }"
-        
-    else
-        echo "Cannot recongnize your OS. Install gitleaks impossible."
-        exit 1
-    fi
+# Визначення операційної системи
+os_name=$(uname)
 
-    chmod +x gitleaks
-    sudo mv gitleaks /usr/local/bin/
-    
-    echo "gitleaks has been installed successfully."
-fi
+# Функція для виведення повідомлення про помилку та вихід зі скрипту
+error_exit() {
+  echo "$1" >&2
+  exit 1
+}
 
-# Виконання gitleaks для перевірки чутливих даних
-gitleaks detect --source . --verbose
+# Функція для встановлення pre-commit
+install_precommit() {
+  echo "Встановлення pre-commit..."
+  if command -v pip3 &>/dev/null; then
+    pip3 install pre-commit
+  elif command -v pip &>/dev/null; then
+    pip install pre-commit
+  else
+    error_exit "pip не знайдено. Встановіть pip перед встановленням pre-commit."
+  fi
+}
+
+# Функція для створення та наповнення .pre-commit-config.yaml
+create_precommit_config() {
+  echo "Створення .pre-commit-config.yaml..."
+  echo "- repo: https://github.com/gitleaks/gitleaks" > .pre-commit-config.yaml
+  echo "  rev: v8.18.1" >> .pre-commit-config.yaml
+  echo "  hooks:" >> .pre-commit-config.yaml
+  echo "    - id: gitleaks" >> .pre-commit-config.yaml
+}
+
+# Функція для виконання команд pre-commit
+run_precommit_commands() {
+  echo "Виконання команд pre-commit..."
+  pre-commit autoupdate
+  #pre-commit install
+  pre-commit install -f --hook-type pre-commit
+  pre-commit
+}
+
+# Визначення наявності Python
+check_python() {
+  if command -v python3 &>/dev/null; then
+    echo "Python встановлено"
+  else
+    error_exit "Python не знайдено. Встановіть Python перед використанням цього скрипта."
+  fi
+}
+
+# Визначення наявності pre-commit
+check_precommit() {
+  if command -v pre-commit &>/dev/null; then
+    echo "pre-commit встановлено"
+  else
+    install_precommit
+    echo "pre-commit успішно встановлено"
+  fi
+}
+
+# Визначення наявності .pre-commit-config.yaml
+check_precommit_config() {
+  if [ -e .pre-commit-config.yaml ]; then
+    echo ".pre-commit-config.yaml вже існує"
+  else
+    create_precommit_config
+    echo ".pre-commit-config.yaml успішно створено"
+  fi
+}
+
+# Виведення інформації про операційну систему
+echo "Операційна система: $os_name"
+
+# Перевірка наявності Python
+check_python
+
+# Перевірка наявності pre-commit
+check_precommit
+
+# Перевірка наявності .pre-commit-config.yaml
+check_precommit_config
+
+# Виконання команд pre-commit
+run_precommit_commands
+
+echo "Great news! Now your commits are protected from leaks"
 
 ```
 make it executing
 ```zsh 
 chmod +x pre_commit_check.sh
 ```
-install pre-commit
-```zsh
-$ pre-commit install
-pre-commit installed at .git/hooks/pre-commit
-```
 enable gitleaks
 ```zsh
 $ git config pre-commit.gitleaks true
 ```
-check our script
+check our script commit without token
 ```zsh
-$ git commit -m "with autoinstall script"
+$ git commit -m "check without token"
 
-Finding:     tokenName: REDACTED
-Secret:      REDACTED
-RuleID:      telegram-bot-api-token
-Entropy:     4.816403
-File:        helm/values.yaml
-Line:        16
-Commit:      f17897fbbd640189b982e2d62d0ccc31d77c1681
-Author:      Dennyyyyyyy
-Email:       den.grinyko@gmail.com
-Date:        2024-01-09T12:12:58Z
-Fingerprint: f17897fbbd640189b982e2d62d0ccc31d77c1681:helm/values.yaml:telegram-bot-api-token:16
 
-11:30PM INF 21 commits scanned.
-11:30PM INF scan completed in 61.5ms
-11:30PM WRN leaks found: 7
 ```
-check commit without token
+one more check with token
 ```zsh
-git commit -m "with autoinstall script without token"
-pre_commit_check.........................................................Passed
-[w8task1 a7b5ad2] with autoinstall script without token
- 1 file changed, 1 insertion(+), 1 deletion(-)
+
 ```
