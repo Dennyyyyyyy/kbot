@@ -34,7 +34,8 @@ create_precommit_config() {
 run_precommit_commands() {
   echo "Виконання команд pre-commit..."
   pre-commit autoupdate
-  pre-commit install
+  #pre-commit install
+  pre-commit install -f --hook-type pre-commit
   pre-commit
 }
 
