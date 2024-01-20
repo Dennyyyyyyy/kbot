@@ -6,7 +6,7 @@ replicaCount: 1
 image:
   registry: "ghcr.io"
   repository: dennyyyyyyy/kbot
-  pullPolicy: IfNotPresent
+  #pullPolicy: IfNotPresent
   tag: v1.0.7-aebbbe9
   #  tag: v1.0.1-1-g370829a
   os: linux
