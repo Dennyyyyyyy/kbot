@@ -6,13 +6,17 @@ replicaCount: 1
 image:
   registry: "ghcr.io"
   repository: dennyyyyyyy/kbot
+  pullPolicy: IfNotPresent
   tag: v1.0.7-aebbbe9
   #  tag: v1.0.1-1-g370829a
   os: linux
   arch: ""
+  parameter: go
 secrets:
   name: kbot
-  tokenKey: token
+  env: "TELE_TOKEN"
+  key: 
+  #tokenKey: token
   tokenName: 
 securityContext:
   privileged: true
