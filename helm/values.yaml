@@ -5,9 +5,9 @@
 replicaCount: 1
 image:
   #registry: "ghcr.io"
-  repository: dennyyyyyyy
+  repository: denysdl
   #pullPolicy: IfNotPresent
-  tag: git_hook-9826ff4
+  tag: v1.0.7-135c2ee
   # tag: v1.0.7-aebbbe9
   #  tag: v1.0.1-1-g370829a
   os: linux
