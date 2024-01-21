@@ -4,14 +4,11 @@
 
 replicaCount: 1
 image:
-  registry: "gcr.io"
-  repository: dendemo
-  #pullPolicy: IfNotPresent
-  tag: v2.0.0
-  # tag: v1.0.7-aebbbe9
-  #  tag: v1.0.1-1-g370829a
+  registry: "ghcr.io"
+  repository: dennyyyyyyy
+  tag: v1.0.7-2494549
   os: linux
-  arch: amd64
+  arch: "amd64"
 secret:
   name: "kbot"
   env: "TELE_TOKEN"
