@@ -4,10 +4,10 @@
 
 replicaCount: 1
 image:
-  registry: "ghcr.io"
-  repository: dennyyyyyyy
+  registry: "gcr.io"
+  repository: dendemo
   #pullPolicy: IfNotPresent
-  tag: v1.0.7-6977b1c
+  tag: v2.0.0
   # tag: v1.0.7-aebbbe9
   #  tag: v1.0.1-1-g370829a
   os: linux
