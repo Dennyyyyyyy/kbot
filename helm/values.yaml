@@ -7,11 +7,11 @@ image:
   registry: "ghcr.io"
   repository: dennyyyyyyy/kbot
   #pullPolicy: IfNotPresent
-  tag: v1.0.7-2494549-linux-amd64
+  tag: v1.0.7-2494549
   #tag: v1.0.7-aebbbe9
   #  tag: v1.0.1-1-g370829a
   os: linux
-  arch: ""
+  arch: amd64
 secret:
   name: "kbot"
   env: "TELE_TOKEN"
