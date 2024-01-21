@@ -4,7 +4,7 @@
 
 replicaCount: 1
 image:
-  registry: "ghcr.io"
+  #registry: "ghcr.io"
   repository: denysdl
   #pullPolicy: IfNotPresent
   tag: v1.0.7-aebbbe9
