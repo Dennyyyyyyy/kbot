@@ -17,5 +17,3 @@ secret:
   key: "token"
 securityContext:
   privileged: true
-service:
-  port: 8080
