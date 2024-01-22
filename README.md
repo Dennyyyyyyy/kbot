@@ -42,9 +42,18 @@ Switch red light signal to 1 - response to a command, repetition – Switch red 
 
 ## Monitoring 
 
-http://localhost:3002/
+Welcome to `Grafana` http://localhost:3002/
+![0](./img/SCR-20240122-tzoo.png)
+check our datasources
+![1](./img/SCR-20240122-tynt.png)
+select the kbot_ metric
+![2](./img/SCR-20240123-bkei.png)
+receive information of the red signal
+![3](./img/SCR-20240123-bkvl.png)
+let's switch to `Loki` and filter the log for the amber signal
+![4](./img/SCR-20240123-bmrx.png)
+you can easily view logs in json format by adding the appropriate expression
+![5](./img/SCR-20240123-bopc.png)
 
-![1]()
-![2]()
-![3]()
-![4]()
+Kbot_demo dashboard
+![6](./img/SCR-20240123-bvqk.png)
