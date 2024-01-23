@@ -6,7 +6,7 @@ replicaCount: 1
 image:
   #registry: ghcr.io
   repository: denysdl
-  tag: v1.0.7-e16349f
+  tag: git_hook-6ab32b0
   os: linux
   arch: amd64
 secret:
